@@ -1,0 +1,45 @@
+Aim for better than these times (they are slow), e.g., on jupyter notebook: jupyter.utwente.nl. 5x slower is passable (but likely not good enough for the project).
+
+#####################################################################################################################
+
+Answers are given in the following format:
+[equivalence_class_1, equivalence_class_2, ...],
+
+with equivalence_class_i = (graph_list, stable_color_freqs, num_iterations, discrete)
+
+graph_list: (0-indexed) list of graphs
+stable_color_freqs: list of frequencies of each colour in abbreviated form. [{1: 6, 2: 3}] means [1, 1, 1, 1, 1, 1, 2, 2, 2]
+num_iterations: number of iterations to reach stable colouring from uniform colouring
+discrete: whether the stable colouring is discrete
+
+#####################################################################################################################
+
+CrefBenchmark1.grl
+[([0, 2], [{1: 3, 2: 312}], 143, False), ([1, 3], [{1: 3, 2: 312}], 188, False)]
+
+Time: 10 seconds
+
+CrefBenchmark2.grl
+[([0, 2, 4], [{1: 514}], 4, True), ([1, 3], [{1: 514}], 4, True)]
+
+Time: <1 seconds
+
+CrefBenchmark3.grl
+[([0, 2, 3], [{1: 1026}], 4, True), ([1, 4], [{1: 1026}], 4, True)]
+
+Time: 2.5 seconds
+
+CrefBenchmark4.grl
+[([0, 1], [{1: 2050}], 4, True), ([2, 3], [{1: 2050}], 4, True)]
+
+Time: 10 seconds
+
+CrefBenchmark5.grl
+[([0, 9], [{3: 9}], 3, False), ([1, 6, 7], [{1: 9, 2: 9}], 6, False), ([2, 3, 4], [{3: 9}], 3, False), ([5, 8], [{1: 9, 2: 9}], 6, False)]
+
+Time: <0.1 seconds
+
+CrefBenchmark6.grl
+[([0, 1], [{1: 3, 2: 632}], 287, False), ([2, 3, 4], [{1: 3, 2: 632}], 380, False)]
+
+Time: 120 seconds

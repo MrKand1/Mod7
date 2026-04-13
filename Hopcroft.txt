@@ -1,0 +1,3 @@
+John Edward Hopcroft (born October 7, 1939) is an American theoretical computer scientist. His textbooks on theory of computation (also known as the Cinderella book) and data structures are regarded as standards in their fields. He is a professor emeritus at Cornell University, co-director of the Center on Frontiers of Computing Studies at Peking University, and the director of the John Hopcroft Center for Computer Science at Shanghai Jiao Tong University.
+
+--https://en.wikipedia.org/wiki/John_Hopcroft (9 April 2025)
