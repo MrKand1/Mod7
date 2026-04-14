@@ -16,7 +16,7 @@ import colorsys
 import xml.etree.ElementTree as ET
 from typing import IO, Tuple, List, Union, Any
 from collections import defaultdict
-from graph import Graph, Edge
+from .graph import Graph, Edge
 
 
 # GraphML settings
@@ -451,7 +451,3 @@ def write_visualization(graph: Graph, f: IO[str], node_attributes: dict[str, Any
                          f"so {f.name} is invalid filename.")
 
 
-if __name__ == "__main__":
-    with open('examplegraph.gr') as file:
-        G = load_graph(file, Graph)
-        print(G)

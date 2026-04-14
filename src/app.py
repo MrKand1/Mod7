@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-main.py – Graph Isomorphism and Automorphism Counting
+app.py – Graph Isomorphism and Automorphism Counting
 
 Usage:
     python main.py <file_or_folder> [GI|Aut|GIAut]
@@ -12,8 +12,8 @@ Handles .gr (single graph) and .grl (graph list) files.
 import sys
 import os
 import time
-from graph import Graph
-from graph_io import load_graph
+from .graph import Graph
+from .graph_io import load_graph
 
 sys.setrecursionlimit(10000)
 
@@ -323,5 +323,3 @@ def main():
         sys.exit(1)
 
 
-if __name__ == "__main__":
-    main()
