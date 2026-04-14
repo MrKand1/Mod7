@@ -1,0 +1,167 @@
+Python Code Documentation (Step-by-Step)
+========================================
+
+Repository entrypoint
+---------------------
+1) File: main.py
+   - Purpose: Single executable entrypoint for the repository.
+   - Behavior:
+     - Imports `main` from `src.app`.
+     - Executes it only when run as a script (`if __name__ == "__main__":`).
+
+
+High-level runtime flow
+-----------------------
+1) User runs:
+   - `python main.py <file_or_folder> [GI|Aut|GIAut]`
+2) `main.py` calls `src.app.main()`.
+3) `src.app.main()`:
+   - Validates CLI arguments.
+   - Resolves target path (single file or directory).
+   - If directory: loops over all `.gr` and `.grl` files.
+   - For each file: calls `solve_file(...)`.
+4) `solve_file(...)`:
+   - Detects task from filename suffix (unless overridden by CLI).
+   - Loads graph(s) using `src.graph_io.load_graph(...)`.
+   - Converts each loaded graph object to a compact adjacency list.
+   - Dispatches to one of:
+     - `solve_gi(...)` for isomorphism classes,
+     - `solve_aut(...)` for automorphism counts,
+     - `solve_gi_aut(...)` for both.
+   - Prints formatted results and elapsed runtime.
+
+
+Core algorithm flow in src/app.py
+---------------------------------
+1) graph_to_adjacency_list(graph)
+   - Converts internal `Graph` objects to list-of-lists integer adjacency.
+   - This gives faster operations for refinement/branching logic.
+
+2) color_refine(neighbours, colors)
+   - Repeatedly refines colors until stable.
+   - Each vertex signature is:
+     - current color,
+     - sorted multiset of neighbor colors.
+   - Vertices with equal signatures receive equal new colors.
+   - Stops when new coloring equals old coloring.
+
+3) merge_graphs(graph_g, graph_h)
+   - Combines adjacency lists of two graphs into one disconnected graph.
+   - Vertices from H are index-shifted by `len(graph_g)`.
+   - Returns merged adjacency + split index (`num_vertices_g`).
+
+4) count_isomorphisms(neighbours, num_vertices_g, colors, only_one=False)
+   - Recursive individualization-refinement routine.
+   - Step A: refine colors (`color_refine`).
+   - Step B: compare color histograms in G and H:
+     - If unbalanced: return 0 immediately.
+   - Step C: if every class size is 1:
+     - Found one bijection; return 1.
+   - Step D: branch:
+     - Choose smallest non-trivial color class in G.
+     - Pick one G vertex `x` in that class.
+     - Try all H vertices `y` in same class.
+     - Give `x` and `y` a fresh unique color and recurse.
+   - Sum recursive counts.
+   - If `only_one=True`, exits early once a solution exists.
+
+5) Problem-level wrappers
+   - are_isomorphic(g, h):
+     - Uses merged graph + recursive counter with `only_one=True`.
+   - count_automorphisms(g):
+     - Runs isomorphism counting on `(g, g)`.
+   - solve_gi(list_of_graphs):
+     - Groups graph indices into isomorphism classes.
+   - solve_aut(list_of_graphs):
+     - Computes automorphism count per graph.
+   - solve_gi_aut(list_of_graphs):
+     - First groups by GI, then computes automorphisms once per class.
+
+
+Graph data structures in src/graph.py
+-------------------------------------
+1) GraphError
+   - Custom exception for invalid graph operations.
+
+2) Vertex
+   - Stores:
+     - owning graph,
+     - label,
+     - incidence map (`neighbor -> set(edges)`).
+   - Provides:
+     - adjacency checks,
+     - neighbor list,
+     - degree,
+     - incident-edge retrieval.
+
+3) Edge
+   - Stores tail/head endpoints and optional weight.
+   - Validates both endpoints belong to same graph.
+   - Provides helper methods:
+     - `other_end(vertex)`,
+     - `incident(vertex)`.
+
+4) Graph
+   - Stores vertex/edge collections.
+   - Supports directed/undirected and simple/non-simple modes.
+   - Core operations:
+     - add vertex/edge,
+     - adjacency query,
+     - edge lookup between vertices,
+     - iteration and length.
+
+5) UnsafeGraph
+   - Faster/less-checked variant of Graph for trusted use cases.
+
+
+Graph parsing and serialization in src/graph_io.py
+--------------------------------------------------
+1) Input pipeline
+   - `read_line`: skips comment lines (`# ...`).
+   - `read_graph`: reads one graph block from `.gr/.grl` format.
+   - `read_graph_list`: reads repeated graph blocks.
+   - `load_graph`:
+     - returns one graph or a list (based on `read_list` flag).
+
+2) Output pipeline
+   - `write_line`, `write_graph_list`, `save_graph`, `print_graph`.
+   - Optional visualization exports:
+     - `write_graphml`,
+     - `write_dot`,
+     - `write_visualization` (extension-based routing).
+
+
+Standalone color refinement utility in src/colorref.py
+------------------------------------------------------
+1) `parse_grl(filepath)`:
+   - Lightweight parser for `.grl` into adjacency lists.
+2) `basic_colorref(path_to_grl)`:
+   - Runs iterative color refinement over all graphs in one file.
+   - Builds grouping keys from per-graph color histograms.
+   - Returns tuples with:
+     - grouped indices,
+     - partition sizes,
+     - stabilization iteration count,
+     - discrete-coloring flag.
+3) This module is separate from the main solver flow in `src/app.py`.
+
+
+How to run
+----------
+1) Single graph file:
+   - `python main.py data/graphs/test_empty.grl`
+2) Force a task:
+   - `python main.py data/graphs/test_empty.grl GI`
+   - `python main.py data/graphs/test_empty.grl Aut`
+   - `python main.py data/graphs/test_empty.grl GIAut`
+3) Whole folder:
+   - `python main.py data/graphs`
+
+
+Current architecture summary
+----------------------------
+- One executable entrypoint: `main.py`
+- Main application logic: `src/app.py`
+- Graph model: `src/graph.py`
+- I/O and exporters: `src/graph_io.py`
+- Extra refinement utility: `src/colorref.py`
