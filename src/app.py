@@ -260,6 +260,7 @@ def solve_file(filepath, task_override=None):
     extension = os.path.splitext(filepath)[1].lower()
     task = task_override if task_override else detect_task(filename)
 
+    # Load graphs from file on variable graphs
     if extension == ".gr":
         with open(filepath, 'r') as file:
             graph = load_graph(file)
@@ -277,6 +278,7 @@ def solve_file(filepath, task_override=None):
     print(f"{filename}")
     start_time = time.time()
 
+    # Route to solving method
     if task == "GI":
         groups = solve_gi(adjacency_lists)
         print("Sets of isomorphic graphs:")
@@ -303,10 +305,13 @@ def main():
         print("  Task is auto-detected from filename, or you can override with 2nd argument.")
         sys.exit(1)
 
+    # Parse command-line arguments
     path = sys.argv[1]
     task_override = sys.argv[2] if len(sys.argv) >= 3 else None
 
+    # Check the directory given
     if os.path.isdir(path):
+        # Get files 
         files = sorted(
             filename for filename in os.listdir(path)
             if os.path.splitext(filename)[1].lower() in (".gr", ".grl")
@@ -315,8 +320,10 @@ def main():
             print(f"No .gr or .grl files found in {path}")
             sys.exit(1)
         for filename in files:
+            # Call solver on each file
             solve_file(os.path.join(path, filename), task_override)
     elif os.path.isfile(path):
+        # Call solver on the single file
         solve_file(path, task_override)
     else:
         print(f"Path not found: {path}")
