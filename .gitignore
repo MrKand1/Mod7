@@ -31,3 +31,7 @@ pip-wheel-metadata/
 .DS_Store
 .idea/
 .vscode/
+
+.python-version
+pyproject.toml
+uv.lock
