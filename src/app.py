@@ -1,14 +1,4 @@
 #!/usr/bin/env python3
-"""
-app.py – Graph Isomorphism and Automorphism Counting
-
-Usage:
-    python main.py <file_or_folder> [GI|Aut|GIAut]
-
-Detects task from filename suffix (GI, Aut, GIAut). Defaults to GIAut.
-Handles .gr (single graph) and .grl (graph list) files.
-"""
-
 import sys
 import os
 import time
