@@ -7,9 +7,7 @@ from .graph_io import load_graph
 sys.setrecursionlimit(10000)
 
 
-# ============================================================================
-# Convert Graph object to flat adjacency list for fast processing
-# ============================================================================
+# Convert Graph object to flat adjacency list for fast processing ==================
 
 def graph_to_adjacency_list(graph):
     """Convert a Graph object to an adjacency list."""
@@ -25,9 +23,7 @@ def graph_to_adjacency_list(graph):
     return adjacency
 
 
-# ============================================================================
-# Colour refinement
-# ============================================================================
+# Colour refinement ================================================================
 
 def color_refine(neighbours, colors):
     """
@@ -89,9 +85,7 @@ def color_refine(neighbours, colors):
         current_colors = new_colors
 
 
-# ============================================================================
-# Merge two graphs into one adjacency list
-# ============================================================================
+# Merge two graphs into one adjacency list for branching ===========================
 
 def merge_graphs(graph_g, graph_h):
     """
@@ -110,9 +104,7 @@ def merge_graphs(graph_g, graph_h):
     return merged_neighbours, num_vertices_g
 
 
-# ============================================================================
-# Branching (individualisation-refinement) — Algorithm 2 from the lectures
-# ============================================================================
+# Branching (individualisation-refinement) =========================================
 
 def count_isomorphisms(neighbours, num_vertices_g, colors, only_one=False):
     """
@@ -205,9 +197,7 @@ def count_isomorphisms(neighbours, num_vertices_g, colors, only_one=False):
     return num_isomorphisms
 
 
-# ============================================================================
-# Public solving functions
-# ============================================================================
+# Solving functions =========================================================
 
 def are_isomorphic(graph_g, graph_h):
     """Check if two graphs are isomorphic (True/False)."""
@@ -301,9 +291,7 @@ def solve_gi_aut(adjacency_lists):
     return result
 
 
-# ============================================================================
-# File handling & main
-# ============================================================================
+# File handling & main =============================================================
 
 def detect_task(filename):
     """Detect the task (GI, Aut, GIAut) from the filename."""
